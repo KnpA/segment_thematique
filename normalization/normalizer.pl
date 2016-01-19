@@ -5,7 +5,7 @@ use Encode;
 use strict;
 #use utf8;
 use POSIX qw(locale_h);
-use encoding 'utf8';
+use utf8;
 
 # command line processing
 use Getopt::Long;
@@ -536,10 +536,10 @@ sub abbrev {
 }
 
 
+open(F, "<$text_fn") or die("Unable to open $text_fn\n");
 
 
-
-while (<>) {
+while (<F>) {
 #    $_ = Encode::decode( 'utf8', $_);
 
 	chomp;
@@ -656,6 +656,8 @@ while (<>) {
 	$output =~ s/ÖVP/Ö. V. P./gm;
 	$output =~ s/FPÖ/F. P. Ö./gm;
 }
+
+close(F);
 
 #remove greek letters appart if $lang==greek
 if ($lang ne "GREEK") {
