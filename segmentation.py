@@ -5,7 +5,13 @@ import math
 stub = [
     ['a','b','a','c'],
     ['a','d','c','c'],
-    ['b','d','e','e']
+    ['b','d','e','e'],
+    ['t','h','e','f'],
+    ['t','h','k','f'],
+    ['t','t','f','f'],
+    ['t','t','f'],
+    ['t','h','k','k','e'],
+    ['r','t','j','k','e'],
 ]
 
 def Phrase2Vecteur(phrase,normalize=True):
@@ -55,17 +61,33 @@ def Distance(vec1,vec2,L=2):
     dist = math.pow(dist,1/float(L))
     return dist
 
+def GlissementFenetre(vects,taille=2):
+    ecarts={}
+    maxi=-1
+    for x in range(taille, len(vects)-taille+1):
+        partie_gauche = {}
+        partie_droite = {}
+        for y in range(x-taille,x):
+            partie_gauche=ConcatVecteur(partie_gauche,vects[y])
+        for y in range(x,x+taille):
+            partie_droite=ConcatVecteur(partie_droite,vects[y])
+        ecarts[x]=Distance(partie_gauche,partie_droite)
+        if ecarts[x] > maxi :
+            maxi=ecarts[x]
+    for k,v in ecarts.iteritems():
+        ecarts[k] = v / float(maxi)
+    return ecarts
+
 def Test():
     print "Segmentation OK"
 
 def Main():
-    print stub
+    #print stub
     vects = []
     for phrase in stub:
         vects.append(Phrase2Vecteur(phrase))
-        print Phrase2Vecteur(phrase)
-    print Distance(vects[0],vects[1])
-    
+        #print Phrase2Vecteur(phrase)
+    print GlissementFenetre(vects)
     
 
 if __name__ == '__main__':
