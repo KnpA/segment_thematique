@@ -8,7 +8,7 @@ stub = [
     ['b','d','e','e']
 ]
 
-def Phrase2Vecteur(phrase):
+def Phrase2Vecteur(phrase,normalize=True):
     """
     Convertit un phrase sous forme de vecteur en indiquant les occurences de chaque mot de la phrase
     """
@@ -17,7 +17,11 @@ def Phrase2Vecteur(phrase):
         if mot in vect:
             vect[mot] += 1
         else:
-            vect[mot] = 1 
+            vect[mot] = 1
+    #normalisation par rapport à la longueur de la phrase
+    if normalize:
+        for k in vect:
+            vect[k] = vect[k] / float(len(phrase))
     return vect
 
 def ConcatVecteur(vec1,vec2):
