@@ -1,6 +1,11 @@
+# coding: utf8
 
 def Test():
     print "Structuration OK"
 
-if __name__ == '__main__':
+def Main():
     Test()
+    
+
+if __name__ == '__main__':
+    Main()
