@@ -9,8 +9,8 @@ def Main():
     structuration.Test()    
     #Lecture des textes et normalisation
     print "Normalisation des textes..."
-    array = normalisation.ReadTextFile('./donnees/Ecrits/tous_les_articles.txt')
-    print segmentation_tf.Segmentation(array)
+    array = normalisation.Tokenize('./donnees/Ecrits/tous_les_articles.txt')
+    print segmentation_tf.Segmentation(array,0.80,4)
 
 if __name__ == '__main__':
     Main()
