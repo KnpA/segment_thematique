@@ -117,8 +117,9 @@ def Segmentation(phrases):
     segment = []
     i = 0
     for phrase in phrases:
-        if i in ecarts and ecarts[i] > 0.75:
+        if i in ecarts and ecarts[i] > 0.5:
             segments.append(segment)
+            segments.append("<br>")
             segment = []
         for mot in phrase:
             segment.append(mot)
