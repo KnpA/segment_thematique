@@ -30,6 +30,30 @@ def Phrase2Vecteur(phrase,normalize=True):
             vect[k] = vect[k] / float(len(phrase))
     return vect
 
+def InverseDocumentFrequency(vects):
+    """
+    Indique l'IDF de chaque mot dans la collection de vecteurs de phrase
+    """
+    idf = {}
+    for vect in vects:
+        for mot in vect:
+            if mot in idf:
+                idf[mot] += 1
+            else:
+                idf[mot] = 1
+    for k,v in idf.iteritems():
+        idf[k]=math.log(len(vects) / float(v))        
+    return idf
+
+def AppliqueIDF(vects,idf):
+    """
+    Applique l'IDF sur les vecteurs
+    """
+    for vect in vects:
+        for k,v in vect.iteritems():
+            vect[k]=v*idf[k]
+    return vects
+
 def ConcatVecteur(vec1,vec2):
     """
     Concatène deux vecteurs
@@ -87,12 +111,26 @@ def Segmentation(phrases):
     for phrase in phrases:
         vects.append(Phrase2Vecteur(phrase))
         #print Phrase2Vecteur(phrase)
-    print GlissementFenetre(vects)
+    idf = InverseDocumentFrequency(vects)
+    vects = AppliqueIDF(vects,idf)
+    ecarts = GlissementFenetre(vects)
+    segment = []
+    i = 0
+    for phrase in phrases:
+        if i in ecarts and ecarts[i] > 0.75:
+            segments.append(segment)
+            segment = []
+        for mot in phrase:
+            segment.append(mot)
+        segment.append(".")
+        i += 1
+    if segment != []:
+        segments.append(segment)
     return segments
 
 def Main():
     #print stub
-    Segmentation(stub)
+    print Segmentation(stub)
 
 if __name__ == '__main__':
     Main()
