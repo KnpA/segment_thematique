@@ -79,16 +79,20 @@ def GlissementFenetre(vects,taille=2):
     return ecarts
 
 def Test():
-    print "Segmentation OK"
-
-def Main():
-    #print stub
+    print "Segmentation TF OK"
+    
+def Segmentation(phrases):
+    segments = []    
     vects = []
-    for phrase in stub:
+    for phrase in phrases:
         vects.append(Phrase2Vecteur(phrase))
         #print Phrase2Vecteur(phrase)
     print GlissementFenetre(vects)
-    
+    return segments
+
+def Main():
+    #print stub
+    Segmentation(stub)
 
 if __name__ == '__main__':
     Main()

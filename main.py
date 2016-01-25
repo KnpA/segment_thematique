@@ -1,11 +1,12 @@
 # encoding=utf8  
-import normalisation,segmentation,structuration  
+import normalisation,segmentation_tf,segmentation_chaines,structuration  
 
 def Main():
     print "Main"
 
 if __name__ == '__main__':
-    normalisation.Test()
-    segmentation.Test()
-    structuration.Test()
     Main()
+    normalisation.Test()
+    segmentation_tf.Test()
+    segmentation_chaines.Test()
+    structuration.Test()
