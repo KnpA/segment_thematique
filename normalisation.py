@@ -58,12 +58,12 @@ def Tokenize(filename):
     pipetext = p.communicate()[0]
 
     #Copy text to temp file
-    f = open('tmp', 'w')
+    f = open('tmp.txt', 'w')
     f.write(pipetext)
     f.close()
 
     #Normalize
-    pipetext = Normalize('tmp')
+    pipetext = Normalize('tmp.txt')
 
     #Convert in array
     array = TextToArray(pipetext)
