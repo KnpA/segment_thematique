@@ -21,11 +21,11 @@ def Segmentation(phrases, tailleChaine, seuil) :
     
     chaines = CreerChaines(phrases, tailleChaine)
     
-    print chaines
+    #print chaines
     
     segments = CreerSegments(phrases, chaines, seuil)
     
-    print segments
+    #print segments
     return segments
 
 def CreerChaines(phrases, tailleChaine) :
@@ -81,7 +81,7 @@ def CreerSegments(phrases, chaines, seuil) :
         
         if (nbChaines(chaines, i) <= seuil) :
             
-            print "segment"
+            #print "segment"
             
             segments.append(segment)
             
