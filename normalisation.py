@@ -8,12 +8,48 @@ def Test():
     #Lecture des textes et normalisation
     print "Normalisation des textes..."
     for textfile in glob.iglob('./donnees/Ecrits/*.txt'):
-        array = ReadTextFile(textfile)
+        textfile = textfile.split("\\")
+        filename = textfile[0]+'/'+textfile[1]
+        array = Tokenize(filename)
+        print array
     print "Normalisation OK"
-
-def ReadTextFile(filepath):
-    return Tokenize(filepath)
         
+def Normalize(filename):
+    #Normalize
+    args = shlex.split("perl normalization/normalizer.pl FRENCH "+filename)   
+    p = subprocess.Popen(args, stdout=subprocess.PIPE)
+    pipetext = p.communicate()[0]
+    return pipetext
+
+def TextToArray(text):
+    #Convert to array
+    sentences = text.split("\n")
+    array = []
+    for sentence in sentences:
+        words = sentence.split( )
+        validwords = []
+        for word in words:
+            if len(word) > 1:
+                word = word.lower()
+                validwords.append(word)
+        array.append(validwords)
+    return array
+
+def StopList(array):
+    #Remove useless words
+    cleanArray = []
+    with open('./normalization/stopwords.txt') as f:
+        stopList = [x.strip('\n') for x in f.readlines()]
+    
+    for sentence in array:
+        cleanSentence = []
+        for word in sentence:
+            if word not in stopList:
+                cleanSentence.append(word)
+        cleanArray.append(cleanSentence)
+    
+    return cleanArray
+
 
 def Tokenize(filename):
     #Tokenize
@@ -27,18 +63,15 @@ def Tokenize(filename):
     f.close()
 
     #Normalize
-    args = shlex.split("perl normalization/normalizer.pl FRENCH tmp")   
-    p = subprocess.Popen(args, stdout=subprocess.PIPE)
-    pipetext = p.communicate()[0]
+    pipetext = Normalize('tmp')
 
-    #Convert to array
-    sentences = pipetext.split("\n")
-    array = []
-    for sentence in sentences:
-        words = sentence.split( )
-        array.append(words)
+    #Convert in array
+    array = TextToArray(pipetext)
+    
+    #Stop-Words
+    cleanArray = StopList(array)
 
-    return array
+    return cleanArray
 
 if __name__ == '__main__':
     Test()
