@@ -33,13 +33,20 @@ def CreerChaines(phrases, tailleChaine) :
     for phrase in phrases :
         for mot in phrase :
             
+            
+            # MAJ chaines
             if mot in compteurs.keys() :
+                print chaines[mot]
+                chaines[mot]
                 
+            else :
+                if mot not in chaines.keys() :
+                    chaines[mot] = []
+                    
+                chaines[mot].append([])
             
             # MAJ compteurs
             for cleCompteur in compteurs.keys() :
-                
-                #chaines[mot] = 
                 
                 if compteurs[cleCompteur] == 1 :
                     del compteurs[cleCompteur]
