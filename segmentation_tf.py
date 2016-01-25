@@ -85,7 +85,7 @@ def Distance(vec1,vec2,L=2):
     dist = math.pow(dist,1/float(L))
     return dist
 
-def GlissementFenetre(vects,taille=2):
+def GlissementFenetre(vects,taille=3):
     ecarts={}
     maxi=-1
     for x in range(taille, len(vects)-taille+1):
@@ -105,7 +105,7 @@ def GlissementFenetre(vects,taille=2):
 def Test():
     print "Segmentation TF OK"
     
-def Segmentation(phrases):
+def Segmentation(phrases,threshold=0.5,fenetre=2):
     segments = []    
     vects = []
     for phrase in phrases:
@@ -113,16 +113,17 @@ def Segmentation(phrases):
         #print Phrase2Vecteur(phrase)
     idf = InverseDocumentFrequency(vects)
     vects = AppliqueIDF(vects,idf)
-    ecarts = GlissementFenetre(vects)
+    ecarts = GlissementFenetre(vects,fenetre)
     segment = []
     i = 0
     for phrase in phrases:
-        if i in ecarts and ecarts[i] > 0.75:
+        if i in ecarts and ecarts[i] > threshold:
             segments.append(segment)
+            segments.append("<br>")
             segment = []
         for mot in phrase:
             segment.append(mot)
-        segment.append(".")
+        segment.append(". <b>END_P</b>")
         i += 1
     if segment != []:
         segments.append(segment)

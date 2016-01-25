@@ -7,15 +7,11 @@ sys.setdefaultencoding('utf-8')
 def Test():
     #Lecture des textes et normalisation
     print "Normalisation des textes..."
-    for textfile in glob.iglob('.\donnees\Ecrits\*.txt'):
+    for textfile in glob.iglob('./donnees/Ecrits/*.txt'):
         array = ReadTextFile(textfile)
     print "Normalisation OK"
 
 def ReadTextFile(filepath):
-    filepath = filepath.split("\\")
-    filename = filepath[3]
-    filepath = filepath[0]+"/"+filepath[1]+"/"+filepath[2]+"/"+filepath[3]
-    print "Reading file "+filename
     return Tokenize(filepath)
         
 
