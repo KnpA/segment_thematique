@@ -10,7 +10,7 @@ def Main():
     #Lecture des textes et normalisation
     print "Normalisation des textes..."
     array = normalisation.Tokenize('./donnees/Ecrits/tous_les_articles.txt')
-    print segmentation_tf.Segmentation(array,0.80,4)
+    print segmentation_tf.Segmentation(array,threshold=0.45,fenetre=3,useTf=True,useIdf=True)
 
 if __name__ == '__main__':
     Main()

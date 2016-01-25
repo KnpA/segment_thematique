@@ -14,18 +14,18 @@ stub = [
     ['r','t','j','k','e'],
 ]
 
-def Phrase2Vecteur(phrase,normalize=True):
+def Phrase2Vecteur(phrase,termFrequency=True,normalize=True):
     """
     Convertit un phrase sous forme de vecteur en indiquant les occurences de chaque mot de la phrase
     """
     vect = {}
     for mot in phrase:  
-        if mot in vect:
+        if termFrequency and mot in vect:
             vect[mot] += 1
         else:
             vect[mot] = 1
     #normalisation par rapport à la longueur de la phrase
-    if normalize:
+    if termFrequency and normalize:
         for k in vect:
             vect[k] = vect[k] / float(len(phrase))
     return vect
@@ -105,14 +105,15 @@ def GlissementFenetre(vects,taille=3):
 def Test():
     print "Segmentation TF OK"
     
-def Segmentation(phrases,threshold=0.5,fenetre=2):
+def Segmentation(phrases,threshold=0.5,fenetre=2,useTf=True,useIdf=True):
     segments = []    
     vects = []
     for phrase in phrases:
-        vects.append(Phrase2Vecteur(phrase))
+        vects.append(Phrase2Vecteur(phrase,useTf))
         #print Phrase2Vecteur(phrase)
-    idf = InverseDocumentFrequency(vects)
-    vects = AppliqueIDF(vects,idf)
+    if useIdf:
+        idf = InverseDocumentFrequency(vects)
+        vects = AppliqueIDF(vects,idf)
     ecarts = GlissementFenetre(vects,fenetre)
     segment = []
     i = 0
