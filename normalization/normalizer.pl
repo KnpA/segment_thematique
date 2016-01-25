@@ -58,7 +58,7 @@ sub num2unitstr {
 	my %unitstr;
 	
 	$unitstr{"FRENCH"} = {
-	0 => "zéro",
+	0 => "zero",
 	1 => "un",
 	2 => "deux",
 	3 => "trois",
