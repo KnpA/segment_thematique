@@ -1,5 +1,7 @@
 # data
 donnees/
+tmp.txt
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -60,3 +62,4 @@ docs/_build/
 
 # PyBuilder
 target/
+tmp

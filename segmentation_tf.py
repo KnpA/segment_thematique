@@ -14,21 +14,45 @@ stub = [
     ['r','t','j','k','e'],
 ]
 
-def Phrase2Vecteur(phrase,normalize=True):
+def Phrase2Vecteur(phrase,termFrequency=True,normalize=True):
     """
     Convertit un phrase sous forme de vecteur en indiquant les occurences de chaque mot de la phrase
     """
     vect = {}
     for mot in phrase:  
-        if mot in vect:
+        if termFrequency and mot in vect:
             vect[mot] += 1
         else:
             vect[mot] = 1
     #normalisation par rapport à la longueur de la phrase
-    if normalize:
+    if termFrequency and normalize:
         for k in vect:
             vect[k] = vect[k] / float(len(phrase))
     return vect
+
+def InverseDocumentFrequency(vects):
+    """
+    Indique l'IDF de chaque mot dans la collection de vecteurs de phrase
+    """
+    idf = {}
+    for vect in vects:
+        for mot in vect:
+            if mot in idf:
+                idf[mot] += 1
+            else:
+                idf[mot] = 1
+    for k,v in idf.iteritems():
+        idf[k]=math.log(len(vects) / float(v))        
+    return idf
+
+def AppliqueIDF(vects,idf):
+    """
+    Applique l'IDF sur les vecteurs
+    """
+    for vect in vects:
+        for k,v in vect.iteritems():
+            vect[k]=v*idf[k]
+    return vects
 
 def ConcatVecteur(vec1,vec2):
     """
@@ -61,7 +85,7 @@ def Distance(vec1,vec2,L=2):
     dist = math.pow(dist,1/float(L))
     return dist
 
-def GlissementFenetre(vects,taille=2):
+def GlissementFenetre(vects,taille=3):
     ecarts={}
     maxi=-1
     for x in range(taille, len(vects)-taille+1):
@@ -79,16 +103,36 @@ def GlissementFenetre(vects,taille=2):
     return ecarts
 
 def Test():
-    print "Segmentation OK"
+    print "Segmentation TF OK"
+    
+def Segmentation(phrases,threshold=0.5,fenetre=2,useTf=True,useIdf=True):
+    segments = []    
+    vects = []
+    for phrase in phrases:
+        vects.append(Phrase2Vecteur(phrase,useTf))
+        #print Phrase2Vecteur(phrase)
+    if useIdf:
+        idf = InverseDocumentFrequency(vects)
+        vects = AppliqueIDF(vects,idf)
+    ecarts = GlissementFenetre(vects,fenetre)
+    segment = []
+    i = 0
+    for phrase in phrases:
+        if i in ecarts and ecarts[i] > threshold:
+            segments.append(segment)
+            segments.append("<br>")
+            segment = []
+        for mot in phrase:
+            segment.append(mot)
+        segment.append(". <b>END_P</b>")
+        i += 1
+    if segment != []:
+        segments.append(segment)
+    return segments
 
 def Main():
     #print stub
-    vects = []
-    for phrase in stub:
-        vects.append(Phrase2Vecteur(phrase))
-        #print Phrase2Vecteur(phrase)
-    print GlissementFenetre(vects)
-    
+    print Segmentation(stub)
 
 if __name__ == '__main__':
     Main()
