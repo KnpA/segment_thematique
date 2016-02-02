@@ -48,7 +48,8 @@ def StopList(array):
                 if word.endswith('s'):
                     word = word[:-1]
                 cleanSentence.append(word)
-        cleanArray.append(cleanSentence)
+        if(cleanSentence):
+            cleanArray.append(cleanSentence)
     
     return cleanArray
 

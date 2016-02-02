@@ -1,7 +1,11 @@
+-t-elle
 -t-il
+-t-on
 à
 a-til
+afin
 ai
+ait
 allait
 alors
 après
@@ -60,6 +64,7 @@ lequel
 les
 leur
 leurs
+lors
 lui
 m'
 ma
@@ -75,6 +80,7 @@ n'a
 n'est
 ne
 non
+nos
 nous
 on
 ont
@@ -91,6 +97,7 @@ quelle
 qui
 rien
 s'
+s'est
 s'y
 sa
 sans
@@ -111,4 +118,6 @@ toute
 trop
 un
 une
+vers
+via
 votre
