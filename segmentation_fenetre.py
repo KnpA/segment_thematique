@@ -50,11 +50,11 @@ def Segmentation(phrases,threshold=0.5,fenetre=2,useTf=True,useIdf=True):
     for phrase in phrases:
         if i in ecarts and ecarts[i] > threshold:
             segments.append(segment)
-            segments.append("<br>")
+            #segments.append("<br>")
             segment = []
         for mot in phrase:
             segment.append(mot)
-        segment.append(". <b>END_P</b>")
+        #segment.append(". <b>END_P</b>")
         i += 1
     if segment != []:
         segments.append(segment)
