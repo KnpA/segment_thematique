@@ -88,8 +88,8 @@ def CreerSegments(phrases, frontieres) :
 
     i = 0
     for phrase in phrases :
-        
-        
+        #print phrase
+        #print len(phrase)
         segment += phrase
         #print segment
         
@@ -118,7 +118,7 @@ def sumChaines(phrases, chaines) :
         pos += len(phrase)
         sumChaine.append(nbChaines(chaines,pos))
         
-    print len(sumChaine)
+    #print len(sumChaine)
     return sumChaine
 
 def detecterSegments(sumChaine, tailleFenetre) :
@@ -128,10 +128,9 @@ def detecterSegments(sumChaine, tailleFenetre) :
     res = []
     
     while pos < len(sumChaine)-tailleFenetre :
-        
         fenAvant = sumChaine[pos-tailleFenetre:pos]
         fenMilieu = sumChaine[pos]
-        fenApres = sumChaine[pos+1:pos+tailleFenetre]
+        fenApres = sumChaine[pos+1:pos+1+tailleFenetre]
         
         if fenMilieu < min(fenAvant) and fenMilieu < min(fenApres) :
             #print "FRONTIERE"+str(pos)

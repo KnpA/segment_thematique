@@ -41,8 +41,8 @@ def ClassificationHierarchiqueAscendente(segments,nombre=5,useTf=False,useIdf=Fa
                 candidate1 = i
             for j in range(i+1,len(clusters)):                
                 dist = tf_idf.Distance(vects[i],vects[j])
-                print str(vects[i])+"__"+str(vects[j])
-                print str(i)+" : "+str(j)+" - "+str(dist)
+                #print str(vects[i])+"__"+str(vects[j])
+                #print str(i)+" : "+str(j)+" - "+str(dist)
                 if candidate2 == -1:
                     candidate2 = j
                     minDistance = dist
@@ -52,7 +52,7 @@ def ClassificationHierarchiqueAscendente(segments,nombre=5,useTf=False,useIdf=Fa
                         candidate2 = j
                         minDistance = dist
         #fuse canditate clusters
-        print "Fusing ("+str(candidate1)+";"+str(candidate2)+") with dist = "+str(minDistance)
+        #print "Fusing ("+str(candidate1)+";"+str(candidate2)+") with dist = "+str(minDistance)
         #clusters[candidate1].append("<b>FUSE</b>")
         for mot in clusters[candidate2]:
                 #print mot
@@ -63,7 +63,7 @@ def ClassificationHierarchiqueAscendente(segments,nombre=5,useTf=False,useIdf=Fa
 def Main():
     Test()
     print tf_idf.Distance({"a" : 1,"b" : 0},{"a" : 1,"b" : 0})
-    print ClassificationHierarchiqueAscendente(stub,3,False,False)
+    print ClassificationHierarchiqueAscendente(stub,3,useTf=False,useIdf=True)
 
 if __name__ == '__main__':
     Main()
