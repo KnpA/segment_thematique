@@ -45,6 +45,8 @@ def StopList(array):
         cleanSentence = []
         for word in sentence:
             if word not in stopList:
+                if word.endswith('s'):
+                    word = word[:-1]
                 cleanSentence.append(word)
         cleanArray.append(cleanSentence)
     
