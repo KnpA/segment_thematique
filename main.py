@@ -18,5 +18,3 @@ if __name__ == '__main__':
     #segmentation.Test()
     structuration.Test()
     Main()
-
-
