@@ -11,12 +11,31 @@ def Test():
     print "Normalisation des textes..."
     #ReadTextFiles()
     print "******************"
-    print "Normalisation des transcriptions auto..."
+    print "Lecture des Références..."
+    # Folder = ES, SaH ou INA
+    GetXMLReferences("SaH")
+    print "******************"
+    print "Lecture des transcriptions auto..."
     # Folder = ES, SaH ou INA
     # Si Folder = INA alors subfolder = IRENE ou LIMSI
-    ReadXMLAutoFiles("INA","LIMSI")
+    #ReadXMLAutoFiles("INA","LIMSI")
     print "Normalisation OK"
+
+# ********** Fichiers XML Référence **********
+def GetXMLReferences(folder):
+    for xmlfile in glob.iglob('./donnees/Reference/'+folder+'/*.ssd'):
+        print "Fichier Référence: "+xmlfile
+        GetXMLRef(xmlfile)
+
+def GetXMLRef(xmlfile):
+    tree = etree.parse(xmlfile)
+    for section in tree.xpath("/Trans/Section"):
+        topic = section.get("topic")
+        startTime = section.get("startTime")
+        print "Topic="+topic+", StartTime="+startTime
     
+# ********** Fichiers XML Auto **********
+
 # Affichage du contenu des fichiers de transcription auto
 def ReadXMLAutoFiles(folder, subfolder):
     if (folder == "INA"):
@@ -40,7 +59,8 @@ def ReadXMLAutoFile(filename):
             if ( w.getparent().get("start")==start):
                 phrase = phrase + w.get("str")+" "
         print(phrase+"\n")
-        
+
+# ********** Fichiers Texte **********
 
 def ReadTextFiles():
     for textfile in glob.iglob('.\donnees\Ecrits\*.txt'):
@@ -49,6 +69,8 @@ def ReadTextFiles():
         print "\nFichier: "+filename        
         text = Tokenize(filename)
         print text
+      
+# ********** Traitements **********
 
 def Normalize(filename):
     #Normalize
