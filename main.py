@@ -13,5 +13,10 @@ def Main():
     print segmentation_fenetre.Segmentation(array,threshold=0.87,fenetre=6,useTf=True,useIdf=True)
 
 if __name__ == '__main__':
+    normalisation.ReadXMLFilesAuto()
+    normalisation.Test()
+    #segmentation.Test()
+    structuration.Test()
     Main()
-    
+
+

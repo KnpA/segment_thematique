@@ -17,13 +17,27 @@ stub = [
 def Test():
     print "Segmentation chaines OK"
     
-def Segmentation(phrases, tailleChaine, seuil) :
+def Segmentation(phrases, tailleChaine, tailleFenetre) :
     
     chaines = CreerChaines(phrases, tailleChaine)
     
     #print chaines
     
-    segments = CreerSegments(phrases, chaines, seuil)
+    #segments = CreerSegments(phrases, chaines, seuil)
+    
+    sommeChaines = sumChaines(phrases, chaines)
+    
+    #print sommeChaines
+    
+    sommeChainesF = filtreGaussien5(sommeChaines)
+    
+    #print sommeChainesF
+    
+    frontieres = detecterSegments(sommeChainesF, tailleFenetre)
+    
+    #print frontieres
+    
+    segments =  CreerSegments(phrases,frontieres)
     
     #print segments
     return segments
@@ -66,28 +80,88 @@ def CreerChaines(phrases, tailleChaine) :
     return chaines
 
 
-def CreerSegments(phrases, chaines, seuil) :
+def CreerSegments(phrases, frontieres) :
     segments = []
     
     segment = []
-    
-    i = -1
+    frontiere = frontieres.pop(0)
+
+    i = 0
     for phrase in phrases :
-        i += len(phrase)
+        
         
         segment += phrase
+        #print segment
         
-        print nbChaines(chaines, i)
-        
-        if (nbChaines(chaines, i) <= seuil) :
+        if i >= frontiere :
             
             #print "segment"
+            
             
             segments.append(segment)
             
             segment = []
+            
+            if (len(frontieres) !=0 ) :
+                frontiere = frontieres.pop(0)
+        
+        i += 1
     
     return segments
+
+def sumChaines(phrases, chaines) :
+    
+    sumChaine = [];
+    
+    pos = -1
+    for phrase in phrases :
+        pos += len(phrase)
+        sumChaine.append(nbChaines(chaines,pos))
+        
+    print len(sumChaine)
+    return sumChaine
+
+def detecterSegments(sumChaine, tailleFenetre) :
+    
+    pos = tailleFenetre
+    
+    res = []
+    
+    while pos < len(sumChaine)-tailleFenetre :
+        
+        fenAvant = sumChaine[pos-tailleFenetre:pos]
+        fenMilieu = sumChaine[pos]
+        fenApres = sumChaine[pos+1:pos+tailleFenetre]
+        
+        if fenMilieu < min(fenAvant) and fenMilieu < min(fenApres) :
+            #print "FRONTIERE"+str(pos)
+            res.append(pos)
+        pos += 1
+        
+    #print "FRONTIERE"+str(len(sumChaine)-1)
+    res.append(len(sumChaine)-1)
+   
+    return res
+    
+def filtreGaussien5(tab) :
+    
+    pos = 2
+    
+    res = tab[0:2]
+    
+    while pos < len(tab)-2 :
+        
+        res.append((tab[pos-2]+2*tab[pos-1]+4*tab[pos]+2*tab[pos+1]+tab[pos])/10);
+        
+        pos = pos+1
+        
+    for elem in tab[pos:] :
+        
+        res.append(elem)
+        
+    
+    return res
+    
 
 def nbChaines(chaines, position) :
     
