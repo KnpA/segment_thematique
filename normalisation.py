@@ -1,5 +1,5 @@
 # coding: utf8
-import sys,glob,subprocess,shlex
+import sys,glob,subprocess,shlex,collections
 from lxml import etree
 
 reload(sys)  
@@ -13,12 +13,22 @@ def Test():
     print "******************"
     print "Lecture des Références..."
     # Folder = ES, SaH ou INA
-    GetXMLReferences("SaH")
+    #GetXMLReferences("ES")
     print "******************"
     print "Lecture des transcriptions auto..."
     # Folder = ES, SaH ou INA
     # Si Folder = INA alors subfolder = IRENE ou LIMSI
-    #ReadXMLAutoFiles("INA","LIMSI")
+    #ReadXMLAutoFiles("SaH","LIMSI")
+    print "******************"
+    print "Ecriture des fichiers par topic"
+    # Folder = ES, SaH ou INA
+    # Si Folder = INA alors subfolder = IRENE ou LIMSI
+    #WriteXMLAutoFilesWithRef("INA","IRENE")
+    print "******************"
+    print "Lecture des fichiers par topic"
+    # Folder = ES, SaH ou INA
+    # Si Folder = INA alors subfolder = IRENE ou LIMSI
+    ReadTextAutoFiles("INA","IRENE")
     print "Normalisation OK"
 
 # ********** Fichiers XML Référence **********
@@ -28,11 +38,14 @@ def GetXMLReferences(folder):
         GetXMLRef(xmlfile)
 
 def GetXMLRef(xmlfile):
+    ref = {}
     tree = etree.parse(xmlfile)
     for section in tree.xpath("/Trans/Section"):
         topic = section.get("topic")
         startTime = section.get("startTime")
-        print "Topic="+topic+", StartTime="+startTime
+        endTime = float(section.get("endTime"))
+        ref[endTime] = topic
+    return collections.OrderedDict(sorted(ref.items()))
     
 # ********** Fichiers XML Auto **********
 
@@ -45,6 +58,61 @@ def ReadXMLAutoFiles(folder, subfolder):
 
     for textfile in glob.iglob('./donnees/Transcriptions/'+folder+'/transcriptions/automatique'+subfolder+'/*.ssd'):
         ReadXMLAutoFile(textfile)
+
+def ReadTextAutoFiles(folder, subfolder):
+    if (folder == "INA"):
+        if(subfolder == "LIMSI"):
+            folder = "INA2"
+    for textfile in glob.iglob('./donnees/Results/'+folder+'/*.ssd'):
+        file = textfile.split("\\")
+        file = file[0]+"/"+file[1]
+        text = Tokenize(file)
+        print text
+      
+def WriteXMLAutoFilesWithRef(folder, subfolder):
+    if (folder == "INA"):
+        subfolder = "/"+subfolder
+    else:
+        subfolder = ""
+    
+    # Pour chaque texte du dossier choisi
+    for textfile in glob.iglob('./donnees/Transcriptions/'+folder+'/transcriptions/automatique'+subfolder+'/*.ssd'):        
+        # On récupère le nom du fichier
+        file = textfile.split("\\")
+        file = file[1]
+        print 'Fichier texte: '+file
+        # On récupère le fichier de référence        
+        with open('./donnees/Reference/'+folder+'/'+file) as refFile:
+            # On récupère le tableau de startTime => topic
+            ref = GetXMLRef(refFile)
+            print ref
+        # Pour chaque topic on crée un fichier vierge
+        for d in ref.values():
+            f = open('./donnees/Results/'+folder+'/'+file[:-4]+'_'+d+'.ssd', 'w')
+            f.write("")
+            f.close()
+        # On crée un fichier par topic dans lequel on met les phrases associées
+        tree = etree.parse(textfile)
+        currentTopic = ""
+        prev_spk = ""
+        for ts in tree.xpath("/ssdoc/transcript/ts"):
+            spk = ts.get("spk")
+            start = ts.get("start")
+            currentTopic = ""
+            #print start
+            for key, value in ref.iteritems():
+                if float(start) < key:
+                    currentTopic = value
+                    break
+            phrase = "";
+            for w in ts:
+                phrase = phrase + w.get("str")+" "
+            if(spk != prev_spk):
+                phrase = phrase[:-1]+".\n"
+            prev_spk = spk
+            f = open('./donnees/Results/'+folder+'/'+file[:-4]+'_'+currentTopic+'.ssd', 'a')
+            f.write(phrase)
+            f.close()    
 
 # Affichage du contenu d'un fichier de transcription auto
 def ReadXMLAutoFile(filename):
