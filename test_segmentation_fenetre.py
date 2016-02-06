@@ -1,12 +1,12 @@
 # encoding=utf8  
 
-import normalisation,segmentation_chaines,structuration,mesure
+import normalisation,segmentation_fenetre,structuration,mesure
 
 def Main() :
     
     print "START"
     
-    fichier = open("resultat_segmentation_chaine.txt","w")
+    fichier = open("resultat_segmentation_fenetre.txt","w")
     filename = "./donnees/Ecrits/tous_les_articles.txt"
     
     phrases = normalisation.Tokenize(filename)
@@ -47,16 +47,16 @@ def Main() :
     reference.append(tailleCum)
     
     bestScore = float("inf")
-    bestTailleChaine = 0
+    bestThreshold = 0
     bestTailleFenetre = 0
     
-    for tailleChaine in range(50,301) :
+    for pasThreshhold in range(10,40) :
         for tailleFenetre in range(1,101) :
-    
-            print "tailleChaine="+str(tailleChaine)+" - tailleFenetre="+str(tailleFenetre)
+            currThreshold = pasThreshhold * 0.025;
+            print "threshold="+str(currThreshold)+" - tailleFenetre="+str(tailleFenetre)
             fichier.write("### TRAITEMENT ###"+"\n\n")
-            segments = segmentation_chaines.Segmentation(phrases, tailleChaine, tailleFenetre)
-            fichier.write("tailleChaine="+str(tailleChaine)+" - tailleFenetre="+str(tailleFenetre)+"\n")
+            segments = segmentation_fenetre.Segmentation(phrases,threshold=currThreshold,fenetre=tailleFenetre,useTf=True,useIdf=False)
+            fichier.write("threshold="+str(currThreshold)+" - tailleFenetre="+str(tailleFenetre)+"\n")
             fichier.write(str(len(segments))+" segment(s) :"+"\n")
             
             tailleCum = 0
@@ -70,13 +70,13 @@ def Main() :
             
             if (score < bestScore) :
                 bestScore = score
-                bestTailleChaine = tailleChaine
+                bestThreshold = currThreshold
                 bestTailleFenetre = tailleFenetre
             fichier.write(" --- "+"\n")
     
     
     fichier.write("  MEILLEUR SCORE="+str(bestScore))
-    fichier.write("  MEILLEURE TAILLE CHAINE="+str(bestTailleChaine))
+    fichier.write("  MEILLEUR THRESHOLD="+str(bestThreshold))
     fichier.write("  MEILLEURE TAILLE FENETRE="+str(bestTailleFenetre))
     fichier.write("END"+"\n")
     print "DONE"
