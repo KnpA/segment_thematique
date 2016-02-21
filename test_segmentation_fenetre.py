@@ -55,7 +55,7 @@ def Main() :
             currThreshold = pasThreshhold * 0.025;
             print "threshold="+str(currThreshold)+" - tailleFenetre="+str(tailleFenetre)
             fichier.write("### TRAITEMENT ###"+"\n\n")
-            segments = segmentation_fenetre.Segmentation(phrases,threshold=currThreshold,fenetre=tailleFenetre,useTf=True,useIdf=False)
+            segments = segmentation_fenetre.Segmentation(phrases,threshold=currThreshold,fenetre=tailleFenetre,useTf=True,useIdf=True)
             fichier.write("threshold="+str(currThreshold)+" - tailleFenetre="+str(tailleFenetre)+"\n")
             fichier.write(str(len(segments))+" segment(s) :"+"\n")
             

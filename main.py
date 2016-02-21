@@ -10,7 +10,17 @@ def Main():
     #Lecture des textes et normalisation
     print "Normalisation des textes..."
     array = normalisation.Tokenize('./donnees/Ecrits/tous_les_articles.txt')
-    segments =  segmentation_fenetre.Segmentation(array,threshold=0.85,fenetre=6,useTf=True,useIdf=True)
+    """
+    resultats : TF = True & IDF = false
+     --- 
+    MEILLEUR SCORE=3059  MEILLEUR THRESHOLD=0.85  MEILLEURE TAILLE FENETRE=3END
+    
+    _____
+    resultats : TF = True & IDF = True
+    --- 
+    MEILLEUR SCORE=3853  MEILLEUR THRESHOLD=0.9  MEILLEURE TAILLE FENETRE=1END
+    """
+    segments =  segmentation_fenetre.Segmentation(array,threshold=0.825,fenetre=3,useTf=True,useIdf=False)
     print segments
     for segment in segments:
         print segment
